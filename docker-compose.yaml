@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  app:
+    image: go-rt-dev:1.22
+    container_name: tmp-desafio03
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - /Users/rogeriotadim/git-projects/github/rogeriotadim/pos-goexpert/goexpoert/tmp-desafio03-CleanCode/src:/app
+    networks:
+      - tmp-deafio03
+
+  mariadb:
+    image: mariadb:lts-jammy
+    container_name: tmp-mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: orders
+      MARIADB_USER: root
+      MARIADB_PASSWORD: root
+    ports:
+      - 3306:3306
+    volumes:
+      - .docker/mysql:/var/lib/mysql
+    networks:
+      - tmp-deafio03
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: tmp-rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - tmp-deafio03
+
+networks:
+  tmp-deafio03:
+    driver: bridge
